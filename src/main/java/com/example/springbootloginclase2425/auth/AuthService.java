@@ -6,6 +6,9 @@ import com.example.springbootloginclase2425.user.User;
 import com.example.springbootloginclase2425.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +22,21 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest request) {
-        return null;
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
+
+        UserDetails user=userRepository.findByUsername(request.getUsername()).orElseThrow();
+
+        return AuthResponse.builder()
+                .token(jwtService.getToken(user))
+                .build();
+
     }
 
 

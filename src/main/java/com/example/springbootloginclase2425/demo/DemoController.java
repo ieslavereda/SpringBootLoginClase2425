@@ -1,6 +1,9 @@
 package com.example.springbootloginclase2425.demo;
 
+import com.example.springbootloginclase2425.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DemoController {
 
-    @PostMapping(value = "demo")
-    public String wellcome() {
-        return "Wellcome from secure endpoint ";
+    @GetMapping(value = "demo")
+    public String wellcome(@AuthenticationPrincipal User user) {
+        return "Wellcome "+ user.getUsername() +" from secure endpoint ";
     }
 }
